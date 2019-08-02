@@ -10,11 +10,11 @@ nvm install v4
 
 ## Fork and Download Repositories
 
-To develop bitcore-node-dash:
+To develop bitcore-node-quantisnet:
 
 ```bash
 cd ~
-git clone git@github.com:<yourusername>/bitcore-node-dash.git
+git clone git@github.com:<yourusername>/bitcore-node-quantisnet.git
 git clone git@github.com:<yourusername>/bitcore-lib.git
 ```
 
@@ -48,19 +48,19 @@ brew install zeromq
 ```bash
 cd bitcore-lib
 npm install
-cd ../bitcore-node-dash
+cd ../bitcore-node-quantisnet
 npm install
 ```
 **Note**: If you get a message about not being able to download bitcoin distribution, you'll need to compile bitcoind from source, and setup your configuration to use that version.
 
 
-We now will setup symlinks in `bitcore-node-dash` *(repeat this for any other modules you're planning on developing)*:
+We now will setup symlinks in `bitcore-node-quantisnet` *(repeat this for any other modules you're planning on developing)*:
 ```bash
 cd node_modules
 rm -rf bitcore-lib
 ln -s ~/bitcore-lib
-rm -rf bitcoind-rpc-dash
-ln -s ~/bitcoind-rpc-dash
+rm -rf bitcoind-rpc-quantisnet
+ln -s ~/bitcoind-rpc-quantisnet
 ```
 
 And if you're compiling or developing bitcoin:
@@ -78,7 +78,7 @@ npm install mocha -g
 
 To run all test suites:
 ```bash
-cd bitcore-node-dash
+cd bitcore-node-quantisnet
 npm run regtest
 npm run test
 ```
@@ -102,11 +102,11 @@ cd ~
 mkdir devnode
 cd devnode
 mkdir node_modules
-touch bitcore-node-dash.json
+touch bitcore-node-quantisnet.json
 touch package.json
 ```
 
-Edit `bitcore-node-dash.json` with something similar to:
+Edit `bitcore-node-quantisnet.json` with something similar to:
 ```json
 {
   "network": "livenet",
@@ -136,7 +136,7 @@ Setup symlinks for all of the services and dependencies:
 ```bash
 cd node_modules
 ln -s ~/bitcore-lib
-ln -s ~/bitcore-node-dash
+ln -s ~/bitcore-node-quantisnet
 ln -s ~/insight-api
 ln -s ~/insight-ui
 ```
@@ -158,5 +158,5 @@ rpcpassword=local321
 
 From within the `devnode` directory with the configuration file, start the node:
 ```bash
-../bitcore-node-dash/bin/bitcore-node-dash start
+../bitcore-node-quantisnet/bin/bitcore-node-quantisnet start
 ```

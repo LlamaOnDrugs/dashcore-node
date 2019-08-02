@@ -1,15 +1,15 @@
 'use strict';
 
 var benchmark = require('benchmark');
-var dashdRPC = require('@dashevo/dashd-rpc');
+var quantisnetdRPC = require('@quantisnetevo/quantisnetd-rpc');
 var async = require('async');
 var maxTime = 20;
 
-console.log('Dash Service native interface vs. Dash JSON RPC interface');
+console.log('Quantisnet Service native interface vs. Quantisnet JSON RPC interface');
 console.log('----------------------------------------------------------------------');
 
-// To run the benchmarks a fully synced Dash Core directory is needed. The RPC comands
-// can be modified to match the settings in dash.conf.
+// To run the benchmarks a fully synced Quantisnet Core directory is needed. The RPC comands
+// can be modified to match the settings in quantisnet.conf.
 
 var fixtureData = {
   blockHashes: [
@@ -26,34 +26,34 @@ var fixtureData = {
   ]
 };
 
-var dashd = require('../').services.Dash({
+var quantisnetd = require('../').services.Quantisnet({
   node: {
-    datadir: process.env.HOME + '/.dash',
+    datadir: process.env.HOME + '/.quantisnet',
     network: {
       name: 'testnet'
     }
   }
 });
 
-dashd.on('error', function(err) {
+quantisnetd.on('error', function(err) {
   console.error(err.message);
 });
 
-dashd.start(function(err) {
+quantisnetd.start(function(err) {
   if (err) {
     throw err;
   }
-  console.log('Dash Core started');
+  console.log('Quantisnet Core started');
 });
 
-dashd.on('ready', function() {
+quantisnetd.on('ready', function() {
 
-  console.log('Dash Core ready');
+  console.log('Quantisnet Core ready');
 
-  var client = new dashdRPC({
+  var client = new quantisnetdRPC({
     host: 'localhost',
     port: 18332,
-    user: 'dash',
+    user: 'quantisnet',
     pass: 'local321'
   });
 
@@ -64,12 +64,12 @@ dashd.on('ready', function() {
       var hashesLength = fixtureData.blockHashes.length;
       var txLength = fixtureData.txHashes.length;
 
-      function dashdGetBlockNative(deffered) {
+      function quantisnetdGetBlockNative(deffered) {
         if (c >= hashesLength) {
           c = 0;
         }
         var hash = fixtureData.blockHashes[c];
-        dashd.getBlock(hash, function(err, block) {
+        quantisnetd.getBlock(hash, function(err, block) {
           if (err) {
             throw err;
           }
@@ -78,7 +78,7 @@ dashd.on('ready', function() {
         c++;
       }
 
-      function dashdGetBlockJsonRpc(deffered) {
+      function quantisnetdGetBlockJsonRpc(deffered) {
         if (c >= hashesLength) {
           c = 0;
         }
@@ -92,12 +92,12 @@ dashd.on('ready', function() {
         c++;
       }
 
-      function dashGetTransactionNative(deffered) {
+      function quantisnetGetTransactionNative(deffered) {
         if (c >= txLength) {
           c = 0;
         }
         var hash = fixtureData.txHashes[c];
-        dashd.getTransaction(hash, true, function(err, tx) {
+        quantisnetd.getTransaction(hash, true, function(err, tx) {
           if (err) {
             throw err;
           }
@@ -106,7 +106,7 @@ dashd.on('ready', function() {
         c++;
       }
 
-      function dashGetTransactionJsonRpc(deffered) {
+      function quantisnetGetTransactionJsonRpc(deffered) {
         if (c >= txLength) {
           c = 0;
         }
@@ -122,22 +122,22 @@ dashd.on('ready', function() {
 
       var suite = new benchmark.Suite();
 
-      suite.add('dashd getblock (native)', dashdGetBlockNative, {
+      suite.add('quantisnetd getblock (native)', quantisnetdGetBlockNative, {
         defer: true,
         maxTime: maxTime
       });
 
-      suite.add('dashd getblock (json rpc)', dashdGetBlockJsonRpc, {
+      suite.add('quantisnetd getblock (json rpc)', quantisnetdGetBlockJsonRpc, {
         defer: true,
         maxTime: maxTime
       });
 
-      suite.add('dashd gettransaction (native)', dashGetTransactionNative, {
+      suite.add('quantisnetd gettransaction (native)', quantisnetGetTransactionNative, {
         defer: true,
         maxTime: maxTime
       });
 
-      suite.add('dashd gettransaction (json rpc)', dashGetTransactionJsonRpc, {
+      suite.add('quantisnetd gettransaction (json rpc)', quantisnetGetTransactionJsonRpc, {
         defer: true,
         maxTime: maxTime
       });
@@ -158,7 +158,7 @@ dashd.on('ready', function() {
       throw err;
     }
     console.log('Finished');
-    dashd.stop(function(err) {
+    quantisnetd.stop(function(err) {
       if (err) {
         console.error('Fail to stop services: ' + err);
         process.exit(1);
